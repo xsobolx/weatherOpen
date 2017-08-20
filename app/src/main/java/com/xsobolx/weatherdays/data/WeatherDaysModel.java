@@ -20,7 +20,7 @@ public class WeatherDaysModel {
         this.service = service;
     }
 
-    public Single<OpenWeatherReposne> getWeather(@NonNull final String id, @NonNull final String appId) {
+    public Single<OpenWeatherResposne> getWeather(@NonNull final String id, @NonNull final String appId) {
         return service.getDailyForecast(id, appId);
     }
 

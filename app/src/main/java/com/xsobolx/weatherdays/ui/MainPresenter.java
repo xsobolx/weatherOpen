@@ -2,7 +2,8 @@ package com.xsobolx.weatherdays.ui;
 
 import android.util.Log;
 
-import com.xsobolx.weatherdays.data.OpenWeatherReposne;
+import com.xsobolx.weatherdays.Network.OpenWeatherMapService;
+import com.xsobolx.weatherdays.data.OpenWeatherResposne;
 import com.xsobolx.weatherdays.data.WaetherVOMapper;
 import com.xsobolx.weatherdays.data.WeatherDaysModel;
 import com.xsobolx.weatherdays.data.WeatherVO;
@@ -26,8 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter {
 
-    private static final String ID = "524901";
-    private static final String APP_ID = "1768e2cb3a5a952ffec2b094080ebad9";
+    private static final String TAG = "PRESENTER";
 
     private MainFragmentView view;
     private WeatherDaysModel model;
@@ -39,7 +39,7 @@ public class MainPresenter {
     }
 
     public void onCreate() {
-        getWeather(ID, APP_ID);
+        getWeather(OpenWeatherMapService.ID, OpenWeatherMapService.APP_ID);
     }
 
     public void onDestroy() {
@@ -51,10 +51,11 @@ public class MainPresenter {
 
     public void getWeather(@NonNull final String id, @NonNull final String appId) {
         model.getWeather(id, appId)
-                .map(new Function<OpenWeatherReposne, List<WeatherVO>>() {
+                .observeOn(Schedulers.computation())
+                .map(new Function<OpenWeatherResposne, List<WeatherVO>>() {
                     @Override
-                    public List<WeatherVO> apply(@NonNull OpenWeatherReposne openWeatherReposne) throws Exception {
-                        return WaetherVOMapper.getWeatherList(openWeatherReposne);
+                    public List<WeatherVO> apply(@NonNull OpenWeatherResposne openWeatherResposne) throws Exception {
+                        return WaetherVOMapper.getWeatherList(openWeatherResposne);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,7 +65,7 @@ public class MainPresenter {
                         view.showLoading();
                     }
                 })
-                .doAfterTerminate(new Action() {
+                .doFinally(new Action() {
                     @Override
                     public void run() throws Exception {
                         view.hideLoading();
@@ -79,7 +80,7 @@ public class MainPresenter {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        Log.e("PRESENTER", e.getLocalizedMessage(), e);
+                        Log.e(TAG, e.getLocalizedMessage(), e);
                         view.showError();
                     }
                 });

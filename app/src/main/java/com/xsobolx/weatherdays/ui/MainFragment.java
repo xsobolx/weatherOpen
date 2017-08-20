@@ -3,15 +3,16 @@ package com.xsobolx.weatherdays.ui;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.xsobolx.weatherdays.Network.ApiFactory;
+import com.xsobolx.weatherdays.Network.OpenWeatherMapService;
 import com.xsobolx.weatherdays.R;
 import com.xsobolx.weatherdays.data.WeatherDaysModel;
 import com.xsobolx.weatherdays.data.WeatherVO;
@@ -27,7 +28,7 @@ import java.util.List;
 public class MainFragment extends Fragment implements MainFragmentView, CallBack<String> {
 
     private RecyclerView rvMain;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout srlMain;
     private MainAdapter adapter;
 
     private MainPresenter mainPresenter;
@@ -37,7 +38,15 @@ public class MainFragment extends Fragment implements MainFragmentView, CallBack
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         rvMain = view.findViewById(R.id.list_main);
-        progressBar = view.findViewById(R.id.progress_main);
+
+        srlMain = view.findViewById(R.id.swipe_refresh_main);
+        srlMain.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mainPresenter.getWeather(OpenWeatherMapService.ID, OpenWeatherMapService.APP_ID);
+            }
+        });
+
         return view;
     }
 
@@ -64,16 +73,12 @@ public class MainFragment extends Fragment implements MainFragmentView, CallBack
 
     @Override
     public void showLoading() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
+        srlMain.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
+        srlMain.setRefreshing(false);
     }
 
     @Override

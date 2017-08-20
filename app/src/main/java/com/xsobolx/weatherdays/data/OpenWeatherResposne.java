@@ -10,12 +10,12 @@ import java.util.List;
  * email: asobol@ccsteam.ru
  */
 
-public class OpenWeatherReposne {
+public class OpenWeatherResposne {
 
     @SerializedName("list")
     private List<WeatherDay> weatherDayList;
 
-    public OpenWeatherReposne() {
+    public OpenWeatherResposne() {
 
     }
 
@@ -29,7 +29,7 @@ public class OpenWeatherReposne {
 
     @Override
     public String toString() {
-        return "OpenWeatherReposne{" +
+        return "OpenWeatherResposne{" +
                 ", weatherDayList=" + weatherDayList + '}';
     }
 

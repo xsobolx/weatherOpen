@@ -1,7 +1,6 @@
 package com.xsobolx.weatherdays.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,25 +14,22 @@ import java.util.List;
 public class WaetherVOMapper {
 
     @NonNull
-    public static List<WeatherVO> getWeatherList(OpenWeatherReposne weather) {
-
-        Log.d("WEATHER LIST: ", weather.getWeatherDayList().toString());
-
-
+    public static List<WeatherVO> getWeatherList(OpenWeatherResposne weather) {
         List<WeatherVO> weatherVOList = new ArrayList<>();
-        for (OpenWeatherReposne.WeatherDay weatherDayDay : weather.getWeatherDayList()) {
+        for (OpenWeatherResposne.WeatherDay weatherDayDay : weather.getWeatherDayList()) {
             weatherVOList.add(getWeather(weatherDayDay));
         }
         return weatherVOList;
     }
 
     @NonNull
-    private static WeatherVO getWeather(OpenWeatherReposne.WeatherDay weatherDay) {
+    private static WeatherVO getWeather(OpenWeatherResposne.WeatherDay weatherDay) {
         final int date = weatherDay.getDt();
         final double day = weatherDay.getTemp().getDay();
         final double min = weatherDay.getTemp().getMin();
         final double max = weatherDay.getTemp().getMax();
-        final String description = weatherDay.getDescriptions().get(0).getDescription();
+        final String description = weatherDay.getDescriptions().get(0) != null ?
+                weatherDay.getDescriptions().get(0).getDescription() : "";
 
         return new WeatherVO(date, day, min, max, description);
     }
