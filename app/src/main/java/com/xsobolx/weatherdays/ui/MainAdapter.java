@@ -1,8 +1,10 @@
 package com.xsobolx.weatherdays.ui;
 
 import android.content.Context;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +26,21 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.WeatherViewHol
 
     private Context context;
     private CallBack<String> callBack;
-    private List<WeatherVO> weatherDays = new ArrayList<>();
+    private List<WeatherVO> oldWeatherDays = new ArrayList<>();
 
     public MainAdapter(Context context, CallBack<String> callBack) {
         this.context = context;
         this.callBack = callBack;
     }
 
-    public void setWeatherDays(List<WeatherVO> weatherDays) {
-        this.weatherDays = weatherDays;
-        notifyDataSetChanged();
+    public void setOldWeatherDays(List<WeatherVO> newWeatherDays) {
+        final WeatherCallback diffCallback = new WeatherCallback(oldWeatherDays, newWeatherDays);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        oldWeatherDays.clear();
+        oldWeatherDays.addAll(newWeatherDays);
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override
@@ -44,7 +51,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.WeatherViewHol
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
-        final WeatherVO weather = weatherDays.get(position);
+        final WeatherVO weather = oldWeatherDays.get(position);
+
+        Log.d("ADAPTER", weather.toString());
 
         holder.date.setText(formatDate(weather.getDate()));
         holder.day.setText(String.valueOf(weather.getDay()));
@@ -55,7 +64,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.WeatherViewHol
 
     @Override
     public int getItemCount() {
-        return weatherDays.size();
+        return oldWeatherDays.size();
     }
 
     private String formatDate(long date) {
@@ -83,7 +92,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.WeatherViewHol
 
         @Override
         public void onClick(View view) {
-            callBack.call(formatDate(weatherDays.get(0).getDate()));
+            callBack.call(formatDate(oldWeatherDays.get(0).getDate()));
         }
     }
 }

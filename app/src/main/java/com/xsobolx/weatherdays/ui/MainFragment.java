@@ -83,7 +83,7 @@ public class MainFragment extends Fragment implements MainFragmentView, CallBack
 
     @Override
     public void showData(List<WeatherVO> weatherDays) {
-        adapter.setWeatherDays(weatherDays);
+        adapter.setOldWeatherDays(weatherDays);
     }
 
     @Override
