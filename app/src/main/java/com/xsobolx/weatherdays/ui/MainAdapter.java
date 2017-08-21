@@ -53,8 +53,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.WeatherViewHol
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
         final WeatherVO weather = oldWeatherDays.get(position);
 
-        Log.d("ADAPTER", weather.toString());
-
         holder.date.setText(formatDate(weather.getDate()));
         holder.day.setText(String.valueOf(weather.getDay()));
         holder.min.setText(String.valueOf(weather.getMin()));
