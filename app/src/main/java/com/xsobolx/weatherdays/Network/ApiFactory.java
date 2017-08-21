@@ -24,6 +24,7 @@ public class ApiFactory {
     private ApiFactory() {
     }
 
+    @NonNull
     public static OpenWeatherMapService getOpenWeatherMapService() {
         OpenWeatherMapService service = sOpenWeatherMapService;
 

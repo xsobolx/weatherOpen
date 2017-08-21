@@ -14,8 +14,8 @@ import retrofit2.http.Query;
 
 public interface OpenWeatherMapService {
 
-    public static final String ID = "524901";
-    public static final String APP_ID = "1768e2cb3a5a952ffec2b094080ebad9";
+    String ID = "524901";
+    String APP_ID = "1768e2cb3a5a952ffec2b094080ebad9";
 
     @GET("/data/2.5/forecast/daily")
     Single<OpenWeatherResposne> getDailyForecast(@Query("id") String id,
